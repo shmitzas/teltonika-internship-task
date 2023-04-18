@@ -103,7 +103,7 @@ namespace teltonika_internship_task
             Console.WriteLine(x_axis);
         }
 
-        public static void DrawSpeedHistogram(List<GpsData> gpsDataList)
+        private static void DrawSpeedHistogram(List<GpsData> gpsDataList)
         {
 
             // Determine the range of speeds in the GPS data
