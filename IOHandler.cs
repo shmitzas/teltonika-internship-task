@@ -12,27 +12,34 @@ namespace teltonika_internship_task
     {
         public List<GpsData> ReadGpsDataFromFile(string filePath)
         {
-            using (StreamReader streamReader = new StreamReader(filePath))
+            try
             {
-                string fileExtension = Path.GetExtension(filePath);
+                using (StreamReader streamReader = new StreamReader(filePath))
+                {
+                    string fileExtension = Path.GetExtension(filePath);
 
-                if (fileExtension == ".json")
-                {
-                    return ReadFromJson(streamReader);
-                }
-                else if (fileExtension == ".csv")
-                {
-                    return ReadFromCSV(streamReader);
+                    if (fileExtension == ".json")
+                    {
+                        return ReadFromJson(streamReader);
+                    }
+                    else if (fileExtension == ".csv")
+                    {
+                        return ReadFromCSV(streamReader);
 
+                    }
+                    else if (fileExtension == ".bin")
+                    {
+                        return ReadFromBinary(streamReader);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Invalid file extension. The file must be in JSON, CSV or Binary format.");
+                    }
                 }
-                else if (fileExtension == ".bin")
-                {
-                    return ReadFromBinary(streamReader);
-                }
-                else
-                {
-                    throw new ArgumentException("Invalid file extension. The file must be in JSON, CSV or Binary format.");
-                }
+            }
+            catch (Exception ex) 
+            {
+                throw new Exception($"File '{filePath}' does not exist.");
             }
         }
 

@@ -6,4 +6,8 @@
     <RootNamespace>teltonika_internship_task</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Geolocation.NetStandard" Version="1.1.1" />
+  </ItemGroup>
+
 </Project>
