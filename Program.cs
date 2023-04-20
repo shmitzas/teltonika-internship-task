@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Geolocation;
 
 namespace teltonika_internship_task
 {
@@ -15,8 +17,10 @@ namespace teltonika_internship_task
             var ioHandler = new IOHandler();
             gpsData = ioHandler.ReadGpsDataFromFile(filePath);
             DrawSatellitesHistogram(gpsData);
-            Console.WriteLine("\n");
-            DrawSpeedHistogram(gpsData); 
+            Console.WriteLine();
+            DrawSpeedHistogram(gpsData);
+            Console.WriteLine();
+            CalculateRoads(gpsData);
         }
         private static void DrawSatellitesHistogram(List<GpsData> gpsDataList)
         {
@@ -112,7 +116,7 @@ namespace teltonika_internship_task
             double speedRange = maxSpeed - minSpeed;
             int binCount = (int)Math.Round(maxSpeed / 10);
             // Calculate the bin size based on the range and bin count
-            double binSize = Math.Ceiling(speedRange / binCount)-1;
+            double binSize = Math.Ceiling(speedRange / binCount);
 
             // Initialize the bins
             int[] bins = new int[binCount];
@@ -132,16 +136,65 @@ namespace teltonika_internship_task
             }
 
             // Draw the histogram
-            Console.WriteLine($"{"Speed Histogram:", -44} | {"hits", 8}");
+            Console.WriteLine($"{"Speed Histogram:",-44} | {"hits",8}");
             for (int i = 0; i < binCount; i++)
             {
                 double binStart = minSpeed + i * binSize;
                 double binEnd = binStart + binSize - 1;
                 string binLabel = $"{(int)binStart} - {(int)binEnd}";
-                double binPercentage = (double)bins[i] / totalCount *100;
+                double binPercentage = (double)bins[i] / totalCount * 100;
                 string binProgress = new string('#', (int)Math.Round(binPercentage));
                 Console.WriteLine($"[{binLabel,9}] | {binProgress,-30} | {bins[i],8:F0}");
             }
         }
+
+        private static void CalculateRoads(List<GpsData> gpsDataList)
+        {
+            var roadSections = new List<RoadSection>();
+            var startPoint = new GpsData();
+            double distance = 0;
+            for (int i = 0; i < gpsDataList.Count()-1; i++)
+            {
+                if(distance == 0)
+                { 
+                    startPoint = gpsDataList[i];
+                }
+                var point1 = new Coordinate
+                {
+                    Latitude = gpsDataList[i].Latitude,
+                    Longitude = gpsDataList[i].Longitude
+                };
+                var point2 = new Coordinate
+                {
+                    Latitude = gpsDataList[i+1].Latitude,
+                    Longitude = gpsDataList[i+1].Longitude
+                };
+                distance += GeoCalculator.GetDistance(point1, point2, distanceUnit: DistanceUnit.Kilometers, decimalPlaces: 3);
+                                
+                if (distance >= 100.000)
+                {
+                    TimeSpan totalTime = gpsDataList[i + 1].GpsTime - startPoint.GpsTime;
+                    var roadSection = new RoadSection
+                    {
+                        Distance = Math.Round(distance, 3),
+                        Time = totalTime.TotalSeconds,
+                        StartLatitude = startPoint.Latitude,
+                        StartLongitude = startPoint.Longitude,
+                        EndLatitude = gpsDataList[i+1].Latitude,
+                        EndLongitude = gpsDataList[i+1].Longitude,
+                        StartTime = startPoint.GpsTime,
+                        EndTime = gpsDataList[i+1].GpsTime,
+                        AverageSpeed = distance / totalTime.TotalHours
+                    };
+                    roadSections.Add(roadSection);
+                    distance = 0;
+                    totalTime = TimeSpan.Zero;
+                }
+            }
+            var fastestRoadSection = roadSections.OrderBy(r => r.Time).First();
+            Console.WriteLine($"Fastest road section of at least 100km was driven over {fastestRoadSection.Time}s and was {fastestRoadSection.Distance}km long.");
+            Console.WriteLine($"{fastestRoadSection.Format()}");
+        }
     }
+
 }
