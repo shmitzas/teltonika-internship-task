@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Geolocation;
 
 namespace teltonika_internship_task
@@ -13,12 +11,15 @@ namespace teltonika_internship_task
         {
             Console.Write("Enter full file path: ");
             var filePath = Console.ReadLine();
-            List<GpsData> gpsData = new List<GpsData>();
+
             var ioHandler = new IOHandler();
-            gpsData = ioHandler.ReadGpsDataFromFile(filePath);
+            var gpsData = ioHandler.ReadGpsDataFromFile(filePath);
+
             DrawSatellitesHistogram(gpsData);
+
             Console.WriteLine();
             DrawSpeedHistogram(gpsData);
+
             Console.WriteLine();
             CalculateRoads(gpsData);
         }
