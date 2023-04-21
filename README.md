@@ -10,15 +10,15 @@ Create console application which will print report based on input data.
 2. Read GPS data from .csv format file.
 3. Draw histogram of sattelites data, e.g.:
    
-![](docs_images\satellites.png)
+![](https://github.com/shmitzas/teltonika-internship-task/blob/main/docs_images/satellites.png)
 
 4. Draw histogram of speed data, e.g.:
 
-![](docs_images\speed.png)
+![](https://github.com/shmitzas/teltonika-internship-task/blob/main/docs_images/speed.png)
 
 5. Find the road section, along all records loaded from all files, of at least 100 km long which was driven in the shortest time, e.g.:
 
-![](docs_images\calc.png)
+![](https://github.com/shmitzas/teltonika-internship-task/blob/main/docs_images/calc.png)
 
 **Bonus:**
 1. Read and process GPS data form binary format file (.bin)
