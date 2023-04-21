@@ -9,30 +9,27 @@ Create console application which will print report based on input data.
 1. Read GPS data from .json format file.
 2. Read GPS data from .csv format file.
 3. Draw histogram of sattelites data, e.g.:
- ![](RackMultipart20230421-1-6px63i_html_752da1ddac344b95.png)
+   
+![](docs_images\satellites.png)
+
 4. Draw histogram of speed data, e.g.:
 
-![](RackMultipart20230421-1-6px63i_html_ff8b07a9eae51d1c.png)
+![](docs_images\speed.png)
 
-1. Find the road section, along all records loaded from all files, of at least 100 km long which was driven in the shortest time, e.g.:
+5. Find the road section, along all records loaded from all files, of at least 100 km long which was driven in the shortest time, e.g.:
 
-![](RackMultipart20230421-1-6px63i_html_ec0d959f4e267e06.png)
+![](docs_images\calc.png)
 
 **Bonus:**
-
 1. Read and process GPS data form binary format file (.bin)
 
 ## Non-functional requirements
-
 1. All stages of development must be reflected in a GIT repository.
 2. Use .NET5 framework
 3. Follow best practices of OOP programming and SOLID principles.
 4. Upload solution to github.com and send a link, **do not upload GPS data** to github.com
 
-##
-
 ## Data formats
-
 ### .JSON
 
 | array | element |
@@ -49,7 +46,6 @@ Where:
 - Satellites – count of visible GPS satellites at current position.
 
 ### .CSV
-
 Values of elements described in JSON format separated by a comma, e.g.:
 
 Latitude,Longitude,GpsTime,Speed,Angle,Altitude,Satellites
@@ -63,7 +59,6 @@ Latitude,Longitude,GpsTime,Speed,Angle,Altitude,Satellites
 Values of elements described in JSON format stored in binary format, byte order – big endian. Binary representation of elements are stored in a continuous row, one by one.
 
 #### Binary data example
-
 0EE6B280202FBF000000016F5E9DD680000F008000FF0A
 
 | Bytes | Size in bytes | Type | Element | Intermediate Value | Transformation | Final value |
@@ -77,10 +72,8 @@ Values of elements described in JSON format stored in binary format, byte order 
 | 0A | 1 | Byte | Satellites | → | → | 10 |
 
 #### Date math code example:
-
 var gpsTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddMilliseconds(1577840400000);
 
 ## Hints
-
 - To calculate distance between two points use [Geolocation.NetStandard](https://www.nuget.org/packages/Geolocation.NetStandard/) nuget package.
 - Feel free to design your own histogram, do not use third party libraries to draw it.
